@@ -135,6 +135,8 @@ The generated CI workflow (`.github/workflows/loan-origination-tests.yml`) shipp
 
 Even now decoded, that workflow's "Resolve Postman Resource IDs" step reads the gitignored `.postman/resources.yaml` and the spec's environments target `example.com`, so it can't go green on a clean checkout — same limitation and same one-line customer fix (un-ignore `.postman/`) as the companion. Mirrors the companion's layer-2 decision; not re-documented here.
 
+**Idempotency (observed, 2026-05-29).** Re-ran onboarding via `workflow_dispatch` (run `26653148813`) against the already-onboarded workspace. The action updated the **same three collections in place** (Baseline / Smoke / Contract) — no duplicate workspace, collections, or monitor — so onboarding is idempotent at the resource layer. It matches existing resources **by name**, not via persisted repo variables (`gh variable list` shows only the two hand-set inputs `POSTMAN_USER_ID` / `REQUESTER_EMAIL`; no `POSTMAN_*` resource IDs are stored). Two caveats: (1) each run rewrites the committed collection example bodies with freshly randomized sample data, so the sync commit always shows churn even when nothing structural changed; (2) repo-sync regenerates `loan-origination-tests.yml` on every run and re-commits it as the escaped single line — so the PR-R1 decode (item 1) does **not** survive a re-run. The durable fix for item 1 is upstream (repo-sync escaping), not an in-repo edit; the in-repo decode is only valid until the next onboarding run.
+
 <!-- TODO: after running the workflow and validating the UI, add any observations specific to this spec:
 
 - Whether the generated baseline collection correctly handles the

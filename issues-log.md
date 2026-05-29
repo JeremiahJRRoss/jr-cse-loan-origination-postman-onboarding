@@ -30,6 +30,7 @@
 **Error:** One physical line, 90 literal `\n`, invalid YAML (`mapping values are not allowed here, line 1, column 49`); "Invalid workflow file" on GitHub. Original is 4370 bytes — byte-identical to the companion's broken `payments-tests.yml`.
 **Changed:** Decoded `\n` → newlines; verified lossless against the committed bytes (4370 → 4280, reversible) and that it parses with `on` + `jobs.test`. Byte-identity check vs the companion's *fixed* file deferred — companion repo is out of scope for this session's GitHub access; run the `diff` locally.
 **Source of fix:** experiment. Root cause documented in the companion's README §11.A #6 — upstream repo-sync escaping; same generic workflow → same bug.
+**Update (2026-05-29, after idempotency re-run):** the decode does NOT survive a re-run — repo-sync regenerated `loan-origination-tests.yml` as the escaped single line again and re-committed it (sync commit `a795063`, blob back to the original broken hash). Confirms the durable fix must be upstream, not an in-repo edit. Left broken on remote per decision to document-not-re-fix (a re-fix would be clobbered by the next run).
 
 ### 2026-05-29 — decoded CI workflow still can't go green on clean checkout (.postman/ gitignored)
 **Tried:** Reasoning through whether the now-valid `loan-origination-tests.yml` would pass after PR R1.
@@ -42,3 +43,9 @@
 **Error:** Claimed a `variables: write` permission (no such GitHub Actions key — parse error) and that the scaffold "uses spec-path" only, while `onboard.yml` provides both `spec-url` and `spec-path`.
 **Changed:** Corrected both claims in place and demoted the header's authority line to point at `onboard.yml` as the source of truth. Chose correct-in-place (parity) over delete; companion's outcome unverifiable this session (out of scope).
 **Source of fix:** verified against `onboard.yml` + action.yml ("GitHub token used for repo variables and generated commits").
+
+### 2026-05-29 — verified onboarding is idempotent at the resource layer (re-run test)
+**Tried:** Confirming idempotency. Captured `gh variable list`, re-ran `onboard.yml` via `workflow_dispatch` (run `26653148813`) against the already-onboarded workspace, then inspected the action's sync commit (`a795063`).
+**Error:** Not an error — a mixed result. (a) Resources: the action updated the SAME three collections in place (Baseline/Smoke/Contract); no duplicate workspace/collections/monitor → idempotent at the resource layer. It matches by NAME, not via repo variables (none of the `POSTMAN_*` resource IDs are persisted; `gh variable list` shows only the two hand-set inputs). (b) Artifacts churn: each run rewrites collection example bodies with new randomized sample data. (c) Regression: repo-sync re-commits the escaped-newline CI workflow each run, reverting the item-1 decode.
+**Changed:** Documented in README §7.C. No code change — idempotency is correct where it matters; the artifact churn and workflow-revert are upstream behaviors, not repo bugs.
+**Source of fix:** observation (re-run + commit inspection).

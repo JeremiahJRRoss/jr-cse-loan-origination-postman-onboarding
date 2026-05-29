@@ -65,23 +65,97 @@ gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/
 diff /tmp/companion-onboard.yml .github/workflows/onboard.yml | grep -c '^<'
 ```
 
-<!-- TODO: replace with actual output after running both workflows:
+< name: Onboard Payments Service to Postman
+---
+> name: Onboard Loan Origination Service to Postman
+3,6c3,5
+< # Onboards the Payment Refund API into Postman via the open-alpha orchestrator.
+< # This file is the verified working version — every input was validated against
+< # the live postman-cs/postman-api-onboarding-action@v0 contract through four
+< # debugging iterations. See issues-log.md and README §11 for the corrections.
+---
+> # Onboards the Loan Origination API into Postman via the open-alpha orchestrator.
+> # STRUCTURAL COPY of the companion (jr-cse-payments-postman-onboarding) workflow.
+> # Only per-service inputs differ — that's the pattern-transfer thesis, measured.
+7a7,9
+> # All five iteration fixes from companion are pre-applied. First green run
+> # should be one-shot. See ADAPTATION.md for the measured diff vs companion.
+> #
+9a12
+> #              (PAT must include this repo in its access list — see SETUP §2)
+11d13
+< #               (POSTMAN_TEAM_ID only if your Postman team is org-scoped)
+18c20
+<       - 'specs/payment-refund-api-openapi.yaml'
+---
+>       - 'specs/loan-origination-api-openapi.yaml'
+32c34
+<       - name: Onboard Payments service into Postman
+---
+>       - name: Onboard Loan Origination service into Postman
+36,38c38,48
+<           project-name: payment-refund-service
+<           domain: payments
+<           domain-code: PMT
+---
+>           # --- per-service deltas vs companion (jr-cse-payments-postman-onboarding) workflow ---
+>           project-name: loan-origination-service           # was payment-refund-service
+>           domain: lending                                   # was payments
+>           domain-code: LND                                  # was PMT
+>           spec-url: https://raw.githubusercontent.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/main/specs/loan-origination-api-openapi.yaml
+>           spec-path: specs/loan-origination-api-openapi.yaml
+>           environments-json: '["prod","staging","dev"]'    # was prod/uat/qa/dev (3 envs, not 4)
+>           env-runtime-urls-json: '{"prod":"https://lending-api.example.com/v1","staging":"https://lending-api-staging.example.com/v1","dev":"https://lending-api-dev.example.com/v1"}'
+>           ci-workflow-path: .github/workflows/loan-origination-tests.yml
+>           # --- everything below is identical to companion ---
+> 
+41,53d50
+< 
+<           # BOTH spec-url AND spec-path are required. The action.yml declares both
+<           # as optional ("provide either"), but the underlying bootstrap action
+<           # requires spec-url at runtime. spec-path is used for repo-side metadata.
+<           spec-url: https://raw.githubusercontent.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding/main/specs/payment-refund-api-openapi.yaml
+<           spec-path: specs/payment-refund-api-openapi.yaml
+< 
+<           # 4 environments from the spec's servers block
+<           environments-json: '["prod","uat","qa","dev"]'
+<           env-runtime-urls-json: '{"prod":"https://api.payments.example.com/v2","uat":"https://api-uat.payments.example.com/v2","qa":"https://api-qa.payments.example.com/v2","dev":"https://api-dev.payments.example.com/v2"}'
+< 
+<           # Generated CI test workflow — runs the collections on a schedule.
+<           # Explicit path avoids any future default change (current default: ci.yml).
+55d51
+<           ci-workflow-path: .github/workflows/payments-tests.yml
+57,59c53,54
+<           # --- ORG-MODE TEAMS ONLY ---
+<           # Uncomment if your first run errors on team/org. Sets POSTMAN_TEAM_ID
+<           # as a repo variable, then uncomment these two lines:
+---
+>           # --- ORG-MODE TEAMS ONLY (same as companion) ---
+>           # Uncomment if first run errors on team/org. Set POSTMAN_TEAM_ID variable first.
+62a58,69
+>           # --- mTLS (customer-side cert provisioning, OPTIONAL) ---
+>           # The spec declares only JWT in securitySchemes (mTLS lives in
+>           # info.description prose). The generated COLLECTION wires JWT, which
+>           # is correct behavior given the spec. The action DOES accept client
+>           # cert material as base64 PEM via ssl-client-* inputs and passes it
+>           # to repo-sync for the generated CI test workflow. To wire mTLS at
+>           # runtime, customer provisions cert material as secrets and
+>           # uncomments the lines below:
+>           # ssl-client-cert: ${{ secrets.SSL_CLIENT_CERT_B64 }}
+>           # ssl-client-key: ${{ secrets.SSL_CLIENT_KEY_B64 }}
+>           # ssl-client-passphrase: ${{ secrets.SSL_CLIENT_PASSPHRASE }}
+> 
+67,71c74,76
+<           # REQUIRED: gh-fallback-token is a fine-grained PAT with Contents +
+<           # Workflows + Actions + Variables write scopes. The default GITHUB_TOKEN
+<           # cannot write to .github/workflows/ by design (supply-chain protection);
+<           # this PAT lets the action materialize the generated CI test workflow.
+<           # See SETUP.md Step 2 for PAT creation instructions.
+---
+>           # REQUIRED: see companion's onboard.yml for the rationale.
+>           # Default GITHUB_TOKEN cannot write to .github/workflows/; this PAT
+>           # gives the action the ability to materialize the generated CI workflow.
 
-The full diff (lines starting with `<` are companion / payments, lines
-starting with `>` are this repo / loan-origination):
-
-```
-<paste the diff here once both repos are green>
-```
-
-Lines that changed (count of `^<` lines): **<N>**
-
-Categorized:
-- Config (per-service input values): all `<N>` lines
-- Structural (changes to how the workflow is organized): 0 lines
-- Manual (anything that required hand-editing beyond input swap): 0 lines
-
--->
 
 ## 4. Follow-ups (customer-side action items)
 

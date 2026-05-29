@@ -9,7 +9,16 @@ How the onboarding pattern transferred from Payments to Loan Origination.
 
 The pattern transfers from the canonical Payments implementation
 (`jr-cse-payments-postman-onboarding`) to Loan Origination with **8** per-service
-input values changed and **four** customer-side follow-up items.
+input values changed and **four** service-specific items to track (three
+customer-side runtime follow-ups, plus the multipart upload endpoint — which was
+**validated, not assumed**; see §4).
+
+**Two judgment calls anchor this adaptation** (both detailed in §4): (1) mTLS is
+customer-side configuration, so it required **zero** change to the onboarding
+workflow and is **not one of the 8 inputs**; (2) the multipart file-upload
+endpoint — the one endpoint shape Payments doesn't have — was **validated against
+the generated collection**, which the universal pattern absorbed with no
+structural change.
 
 **Compute (ECS+ALB vs Lambda+API Gateway) and declared auth (JWT vs OAuth+JWT)
 are configuration, not structural concerns, at the onboarding layer.** The
@@ -35,8 +44,8 @@ running Postman workspaces. Predictions are flagged as such.
 | OpenAPI version | 3.0.3 | 3.0.3 | None |
 | Spec version | v2.1.0 | v1.4.0 | N/A (their versioning) |
 | Auth declared in `securitySchemes` | OAuth 2.0 + JWT | JWT only | Config — generated collection auth differs |
-| Auth at runtime (real backend) | OAuth 2.0 client creds | mTLS + JWT | **Manual** — mTLS not derivable from spec; wired via `ssl-client-*` inputs |
-| File-upload endpoints | None | `POST /applications/{id}/documents` (multipart/form-data) | **Validate generated collection** post-run |
+| Auth at runtime (real backend) | OAuth 2.0 client creds | mTLS + JWT | **Customer config** — mTLS is not in `securitySchemes` (prose only), so it's *no workflow change* and *not one of the 8 inputs*; provisioned via `ssl-client-*` + trust store (see §4.1) |
+| File-upload endpoints | None | `POST /applications/{applicationId}/documents` (multipart/form-data) | **Validated** — generated Baseline collection wires the multipart body correctly (see §4.2) |
 | Environments | prod / uat / qa / dev (4) | prod / staging / dev (3) | Config (per service) |
 | Server URL pattern | api.payments.example.com | lending-api.example.com | Config |
 | Workflow file structural changes | n/a (baseline) | 0 | **None** |
@@ -169,24 +178,38 @@ workflow regardless of which service. Four items specific to Loan Origination:
 the customer's secret manager. Surface as GitHub secrets `SSL_CLIENT_CERT_B64`,
 `SSL_CLIENT_KEY_B64`, `SSL_CLIENT_PASSPHRASE`. Uncomment the `ssl-client-*`
 input lines in `onboard.yml`.
-**Why:** The spec declares only JWT in `securitySchemes` — mTLS appears in
-`info.description` prose only. The generated collection wires JWT, which is
-correct given the spec. The action accepts cert material and passes it to
-`postman-repo-sync-action` for the generated CI test workflow. This is
-documented action behavior, not a gap.
+**Why:** The spec declares only JWT in `securitySchemes` (verified:
+`securitySchemes.JWT`, `type: http`, `scheme: bearer`) — mTLS appears only in
+`info.description` prose ("Service-to-service: mTLS (mutual TLS)"), i.e. it's a
+transport-layer concern terminated at the ALB/gateway. The generated collection
+wires JWT, which is correct given the spec. The action accepts cert material and
+passes it to `postman-repo-sync-action` for the generated CI test workflow. This
+is documented action behavior, not a gap.
 
-### 4.2 Multipart upload endpoint validation
+**The judgment call:** mTLS required **zero change to the onboarding workflow**.
+It's a certificate / trust-store concern the customer's ops team provisions —
+which is exactly why it belongs in "what the ops team must provide," not in the
+per-service diff, and is **not one of the 8 inputs**. Treating mTLS as a workflow
+change (or as a bug in the action) would be the wrong read of the spec.
 
-**Owner:** CSE (post-onboarding verification).
-**What:** After the green run, open the Baseline collection's
-`POST /applications/{id}/documents` request and confirm:
-- Body type: form-data (multipart)
-- A `file` part is defined
-- The `application/id` path parameter is correctly referenced
-**Why:** Multipart endpoints are an edge case for spec-to-collection
-generators. If the generator dropped the file part or set the wrong content-
-type, patch the collection post-generation and surface upstream as an action
-issue.
+### 4.2 Multipart upload endpoint — validated, not assumed
+
+**Owner:** CSE (post-onboarding verification). **Status: VALIDATED — no open action.**
+**What:** Multipart endpoints are the one edge case for spec-to-collection
+generators that Payments doesn't exercise, so it was checked rather than
+assumed. Inspected the generated Baseline collection's "Upload a document"
+request (`POST /applications/{applicationId}/documents`,
+`postman/exports/baseline.json`) and confirmed:
+- Body type: `formdata` (multipart) — `Content-Type: multipart/form-data` header set
+- The `file` part is defined (`type: file`) and the `documentType` part is present
+  — both are the spec's `required` form fields
+- The `:applicationId` path parameter is correctly referenced in the URL
+**Why it matters:** This is the real shape difference between Loan Origination
+and Payments, and the universal pattern **absorbed it with no structural
+change** — the generator produced a correct multipart request straight from the
+spec. Had it dropped the file part or set the wrong content-type, the fix would
+be to patch the collection post-generation and surface it upstream as an action
+issue. It didn't, so there's nothing to patch.
 
 ### 4.3 Environment URL realism
 
@@ -217,6 +240,12 @@ team can onboard service #3, #4, ... #50 by copying this workflow, swapping
 eight inputs (project-name,
 domain, domain-code, spec-url, spec-path, environments-json,
 env-runtime-urls-json, ci-workflow-path), and pushing.
+
+**It absorbed the one real shape difference without flinching.** Loan
+Origination has a `multipart/form-data` upload endpoint that Payments doesn't;
+the action generated a correct multipart request from the spec (validated — §4.2)
+with zero structural change to the workflow. New endpoint shapes are spec
+concerns, not workflow concerns — more evidence the pattern scales.
 
 **The follow-ups above are honest scope, not surprise work.** The action
 correctly handles spec-driven catalog onboarding for any well-formed OpenAPI

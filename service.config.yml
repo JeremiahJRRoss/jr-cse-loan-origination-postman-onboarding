@@ -52,8 +52,10 @@ adaptation_notes:
 
   file_uploads:
     payments: none
-    loan_origination: "POST /applications/{id}/documents (multipart/form-data)"
-    impact_on_onboarding: validate generated baseline collection handles multipart; patch if needed
+    loan_origination: "POST /applications/{applicationId}/documents (multipart/form-data)"
+    impact_on_onboarding: >
+      validated — generated baseline collection wires the multipart body
+      correctly (file + documentType parts); no patch needed. See ADAPTATION.md §4.2.
 
   environments:
     payments: prod/uat/qa/dev (4)

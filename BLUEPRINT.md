@@ -198,7 +198,7 @@ Steps (per BLUEPRINT.md §4 PR 0):
    - issues-log.md → same format as companion's BLUEPRINT §8
    - README.md stub → BLUEPRINT.md §4 PR 0 step 8
    - .gitignore → same as companion's
-4. Update CLAUDE.md: replace `<COMPANION_REPO_URL>` placeholder at top with the actual URL.
+4. Update CLAUDE.md: ensure the companion URL at top is the real `https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding` (no `COMPANION_REPO_URL` placeholder).
 5. Before committing: `tree -a -I '.git'` and show me.
 6. After my approval: commit per BLUEPRINT.md §4 PR 0 message template, push.
 7. Confirm acceptance gate (4 boxes).
@@ -222,7 +222,7 @@ PR 1 workflow is green.
 1. `git checkout -b pr-1-workflow`.
 2. Fetch companion's workflow:
    ```bash
-   gh api repos/<OWNER>/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
+   gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
      --jq .content | base64 -d > /tmp/companion-onboard.yml
    ```
 3. Copy to this repo:
@@ -250,8 +250,8 @@ PR 1 workflow is green.
    ```bash
    diff /tmp/companion-onboard.yml .github/workflows/onboard.yml
    ```
-   Confirm only ~6 input lines changed (plus surrounding context). Log line
-   count in `issues-log.md`.
+   Confirm only the 8 expected input values changed (plus surrounding context).
+   Log line count in `issues-log.md`.
 6. Commit and push.
 7. `/run-and-watch`.
 8. If failed: diagnose, log, iterate.
@@ -262,14 +262,14 @@ PR 1 workflow is green.
   mTLS is mentioned in `info.description`. Generated collection wires JWT but
   not cert material. Known gap; log it as a follow-up regardless of whether
   the run fails.
-- **File-upload endpoint** (`POST /applications/{id}/documents` uses
+- **File-upload endpoint** (`POST /applications/{applicationId}/documents` uses
   `multipart/form-data`). Verify the generated baseline collection handles this
   correctly by opening the request in Postman UI.
 
 **Acceptance gate:**
 
 - [ ] Latest run on `main` is green
-- [ ] Workflow diff vs companion is only the 6 expected input lines (verified with `diff`)
+- [ ] Workflow diff vs companion is only the 8 expected input values (verified with `diff`)
 - [ ] Postman UI: workspace exists with `lending` naming
 - [ ] Postman UI: spec in Spec Hub, 3 collections, 3 environments, 1 monitor
 - [ ] Multipart upload endpoint generated correctly (verify in Postman UI)
@@ -288,7 +288,7 @@ Structural copy of payments workflow; only per-service inputs changed:
 
 First green run: <link>
 
-Verified deltas: <N> input lines. Workflow shape identical to companion.
+Verified deltas: 8 input lines. Workflow shape identical to companion.
 
 Refs: BLUEPRINT.md §4 PR 1, companion's PR 1
 ```
@@ -312,7 +312,7 @@ Steps (per BLUEPRINT.md §4 PR 1):
 1. Create branch `pr-1-workflow`.
 2. Verify secrets: `gh secret list`. STOP if either is missing.
 3. Fetch companion's workflow:
-   gh api repos/<OWNER>/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
+   gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
      --jq .content | base64 -d > /tmp/companion-onboard.yml
 4. Copy to this repo: `cp /tmp/companion-onboard.yml .github/workflows/onboard.yml`
 5. Change ONLY these inputs (per BLUEPRINT.md §4 PR 1 step 4):
@@ -326,13 +326,13 @@ Steps (per BLUEPRINT.md §4 PR 1):
    - env-runtime-urls-json → the three lending-api URLs from the spec
    - ci-workflow-path → .github/workflows/loan-origination-tests.yml
 6. Diff: `diff /tmp/companion-onboard.yml .github/workflows/onboard.yml`. Confirm
-   only ~6 input lines changed. Show me both the diff and the final file.
+   only the 8 expected input values changed. Show me both the diff and the final file.
 7. After my approval: commit, push.
 8. /run-and-watch.
 9. If failed: diagnose, propose smallest fix, get my approval, iterate. Log via /log-issue.
 10. After green:
     - Open the generated baseline collection in Postman UI.
-    - Find the POST /applications/{id}/documents request. Confirm it's defined
+    - Find the POST /applications/{applicationId}/documents request. Confirm it's defined
       as multipart/form-data with the file part correctly configured.
     - Log mTLS-not-auto-configured as a follow-up via /log-issue, regardless of
       whether the run failed on it (the spec doesn't declare mTLS in
@@ -374,12 +374,12 @@ repos available.
    | Compute target | Lambda + API Gateway | ECS + ALB | N/A (downstream of onboarding) |
    | Auth declared in spec `securitySchemes` | OAuth2 + JWT | JWT only | Config (env auth setup) |
    | Auth actually needed at runtime | OAuth2 client creds | mTLS + JWT | **Manual** (mTLS not in spec) |
-   | Workflow file lines changed | n/a (baseline) | <N> input lines | Config |
+   | Workflow file lines changed | n/a (baseline) | 8 input lines | Config |
    | Workflow structural changes | n/a | 0 | None |
    | Spec freshness | Current | Current | None |
    | Environments | prod/uat/qa/dev | prod/staging/dev | Config (per service) |
    | Server URL pattern | api.payments.example.com | lending-api.example.com | Config |
-   | File-upload endpoints | None | POST /applications/{id}/documents (multipart) | **Validate generated collection** |
+   | File-upload endpoints | None | POST /applications/{applicationId}/documents (multipart) | **Validate generated collection** |
    | Generated workspace name | (observed) | (observed) | Auto-derived |
    | Generated collection count | 3 | 3 | None |
    | Monitor schedule | Default | Default | None |
@@ -395,7 +395,7 @@ repos available.
      pre-request script template referencing certs from a customer secret store.
      Customer ask: provision certs in their secret manager, reference in env var.
 
-   - **Multipart upload validation.** `POST /applications/{id}/documents` uses
+   - **Multipart upload validation.** `POST /applications/{applicationId}/documents` uses
      `multipart/form-data`. Confirm the generated baseline collection has the
      file part correctly defined. If not, patch the collection post-generation
      (one-time per spec change) or surface as a contract-gen limitation.
@@ -410,14 +410,14 @@ repos available.
 
 4. **What this proves about the pattern.** Two paragraphs max.
 
-   - Onboarding workflow is genuinely reusable: ~6 input lines is the diff
+   - Onboarding workflow is genuinely reusable: 8 input values is the diff
      between two services with different compute and different declared auth.
    - Follow-ups are honest scope: pattern works at catalog/spec/collection/env/
      monitor layer. Runtime concerns (mTLS, network restrictions, real
      credentials) are customer-side and live outside the onboarding workflow
      regardless of which service.
 
-5. **Cross-reference.** Final paragraph: "See `<COMPANION_REPO_URL>` for the
+5. **Cross-reference.** Final paragraph: "See `https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding` for the
    canonical pattern implementation, including the universal-vs-per-service
    matrix and the validation evidence."
 
@@ -432,7 +432,7 @@ repos available.
 **Commit message:**
 
 ```
-PR 2: ADAPTATION.md — pattern transfers with <N> lines changed, <M> follow-ups
+PR 2: ADAPTATION.md — pattern transfers with 8 input values changed, four follow-ups
 
 - Diff matrix populated from observed runs in both repos
 - mTLS, multipart, env-URL gaps listed as actionable follow-ups
@@ -468,8 +468,8 @@ Steps (per BLUEPRINT.md §4 PR 2):
 5. Commit per BLUEPRINT.md §4 PR 2 message template.
 6. Confirm acceptance gate (5 boxes).
 
-Do NOT pad. The brief grades on demonstrating how little changed. If 6 lines
-changed, say 6.
+Do NOT pad. The brief grades on demonstrating how little changed. If 8 input
+values changed, say 8.
 ```
 
 ---
@@ -520,7 +520,7 @@ companion repo for the canonical pattern.
 
 ### What I validated manually
 - Diffed the two workflow files line by line to confirm only the expected
-  inputs changed. Final delta: <N> lines.
+  inputs changed. Final delta: 8 input values.
 - Inspected the generated multipart-upload request in the baseline collection
   to confirm the file part was correctly defined.
 - Verified mTLS configuration is NOT auto-wired (consistent with spec's
@@ -534,10 +534,10 @@ companion repo for the canonical pattern.
 
 ### Why this matters
 The brief's strongest signal is "how little actually changes." Copy-then-diff
-makes that signal measurable: <N> input lines, 0 structural changes. Parallel
+makes that signal measurable: 8 input lines, 0 structural changes. Parallel
 authorship would have obscured that.
 
-See <COMPANION_REPO_URL>'s AI disclosure for the canonical pattern's AI-vs-human
+See https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding's AI disclosure for the canonical pattern's AI-vs-human
 breakdown.
 ```
 
@@ -635,7 +635,7 @@ service:
   name: loan-origination-service
   domain: lending
   domain_code: LND
-  requester_email: <YOUR_EMAIL>
+  requester_email: jr@ross.moda
 
 spec:
   path: specs/loan-origination-api-openapi.yaml
@@ -676,7 +676,7 @@ adaptation_notes:
 
   file_uploads:
     payments: none
-    loan_origination: POST /applications/{id}/documents (multipart/form-data)
+    loan_origination: POST /applications/{applicationId}/documents (multipart/form-data)
     impact_on_onboarding: |
       Validate generated baseline collection handles multipart correctly.
       Patch post-generation if not.
@@ -700,7 +700,7 @@ Same format as companion. Append-only. Specific. Honest.
 | PR | Gate |
 |---|---|
 | 0 | `tree` matches; `CLAUDE.md` cross-references companion (real URL, not placeholder); no secrets |
-| 1 | Green run; workflow diff vs companion is only expected input lines (~6) |
+| 1 | Green run; workflow diff vs companion is only expected input values (8) |
 | 2 | `ADAPTATION.md` has real numbers, observed values, actionable follow-ups |
 | 3 | README is lean, cross-references companion, AI disclosure is specific |
 
@@ -715,7 +715,7 @@ Same format as companion. Append-only. Specific. Honest.
   the delta, not canonical reference. If you find yourself explaining the
   action chain, stop and link to companion's README.
 - **Inflating the diff to look thorough.** Brief grades on demonstrating how
-  little changed. If 6 lines changed, say 6.
+  little changed. If 8 input values changed, say 8.
 - **Treating mTLS as a bug in the action.** Spec doesn't declare mTLS in
   `securitySchemes`. Action correctly follows spec. mTLS is customer-side
   config, not a tool bug.

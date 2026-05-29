@@ -3,14 +3,13 @@
 ## You are an agent running in this repo
 
 This repo is the **adaptation analysis** for the Postman CSE take-home. The
-canonical pattern lives in `<COMPANION_REPO_URL>` (`jr-cse-payments-postman-onboarding`).
+canonical pattern lives in the companion repo
+[`jr-cse-payments-postman-onboarding`](https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding).
 This repo's job is to demonstrate pattern transfer to a service with meaningfully
 different characteristics — ECS+ALB compute, mTLS+JWT auth — and document the
 diff in `ADAPTATION.md`.
 
-> **Replace `<COMPANION_REPO_URL>` above with the actual companion repo URL when
-> the user first opens Claude Code here.** Keep that URL as the anchor reference
-> for cross-links.
+> The companion URL above is the anchor reference for all cross-links in this repo.
 
 ## Boot checklist (do this every session)
 
@@ -112,7 +111,7 @@ Same as companion.
 ### `/compare-to-payments` — build the diff matrix
 
 Steps:
-1. Ask user for COMPANION_REPO_URL if not in context (e.g., `<OWNER>/jr-cse-payments-postman-onboarding`).
+1. Companion repo: `JeremiahJRRoss/jr-cse-payments-postman-onboarding` (the anchor reference set at the top of this file).
 2. For each of these files, fetch companion's version via `gh api` and diff:
    - `.github/workflows/onboard.yml`
    - `service.config.yml`

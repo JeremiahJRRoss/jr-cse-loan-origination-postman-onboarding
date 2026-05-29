@@ -74,9 +74,10 @@ Steps:
    - issues-log.md (same format as companion)
    - README.md stub (BLUEPRINT.md §4 PR 0 step 8)
 
-3. Update CLAUDE.md: replace the `<COMPANION_REPO_URL>` placeholder near the top
-   with my actual COMPANION_REPO_URL above. Show me the resulting line so I can
-   verify.
+3. Update CLAUDE.md: ensure the companion URL near the top is the real
+   `https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding`
+   (not a `COMPANION_REPO_URL` placeholder). Show me the resulting line so I
+   can verify.
 
 4. Run `tree -a -I '.git'` and show me the output.
 
@@ -86,7 +87,7 @@ Steps:
 **Expect:** All files created, `CLAUDE.md` placeholder replaced, tree printed.
 
 **Decide:** Tree matches BLUEPRINT.md §4 PR 0 layout? Spec verbatim from brief?
-CLAUDE.md placeholder actually replaced (not still `<COMPANION_REPO_URL>`)?
+CLAUDE.md cross-references the companion by real URL (no `COMPANION_REPO_URL` placeholder remaining)?
 No secret values in any file?
 
 ---
@@ -115,7 +116,7 @@ Steps:
 ## PR 1 — Workflow file + first green run (structural copy with deltas)
 
 Goal: copy companion's workflow file; change ONLY per-service inputs. Diff should
-be ~6 lines. Anti-pattern: re-authoring from scratch.
+be the 8 expected input values. Anti-pattern: re-authoring from scratch.
 
 ### Turn 1.1 — Verify environment and fetch companion's workflow
 
@@ -133,13 +134,13 @@ Steps:
    is missing.
 
 2. Verify companion has a green run:
-   gh run list --repo <OWNER>/jr-cse-payments-postman-onboarding --workflow=onboard.yml --limit 1
+   gh run list --repo JeremiahJRRoss/jr-cse-payments-postman-onboarding --workflow=onboard.yml --limit 1
    Confirm the latest run status is "success". STOP if not — companion must be
    green before this repo starts.
 
 3. Fetch companion's workflow file:
    mkdir -p .github/workflows
-   gh api repos/<OWNER>/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
+   gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
      --jq .content | base64 -d > /tmp/companion-onboard.yml
    Confirm file is non-empty and starts with `name:`.
 
@@ -179,7 +180,7 @@ Steps:
    - domain-code → LND
    - requester-email → YOUR_EMAIL (likely same as companion; update if changed)
    - workspace-admin-user-ids → YOUR_POSTMAN_USER_ID (likely same as companion)
-   - spec-url → https://raw.githubusercontent.com/<OWNER>/jr-cse-loan-origination-postman-onboarding/main/specs/loan-origination-api-openapi.yaml
+   - spec-url → https://raw.githubusercontent.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/main/specs/loan-origination-api-openapi.yaml
    - environments-json → '["prod","staging","dev"]'
    - env-runtime-urls-json → the three lending-api URLs from the spec's servers block:
        prod:    https://lending-api.example.com/v1
@@ -210,8 +211,9 @@ this file diverges structurally.
 
 **Expect:** Diff output, line count, full file, modifications list.
 
-**Decide:** Diff is bounded (≤20 lines including context, ~6-10 changed lines
-proper)? Nothing structural changed? Spec URL points to this repo? Approve.
+**Decide:** Diff is bounded (the 8 expected input values; ~33 raw diff lines
+including the extra explanatory comments)? Nothing structural changed? Spec URL
+points to this repo? Approve.
 
 ---
 
@@ -254,7 +256,7 @@ Paste:
 Turn 1.4 — Diagnose the failed run.
 
 Steps:
-1. Pull full failure log: gh run view <RUN_ID> --log-failed
+1. Pull full failure log: gh run view <run-id> --log-failed
 2. Identify root cause — be specific (which step, what error, what input).
 3. Compare to companion's known-good config. Likely causes here, in order of
    probability:
@@ -310,7 +312,7 @@ Turn 1.6 — Run is green. Service-specific validation.
 
 Steps:
 1. Walk me to the generated baseline collection in the Postman UI.
-2. Find the request POST /applications/{id}/documents (the multipart file upload).
+2. Find the request POST /applications/{applicationId}/documents (the multipart file upload).
 3. Open it and verify in the request body:
    - Body type: form-data (multipart)
    - There's a "file" part configured
@@ -354,7 +356,7 @@ Turn 1.7 — Finalize PR 1.
 Steps:
 1. Confirm postman/collections/ has JSON files committed by repo-sync. List them.
 2. Re-run the diff and confirm the final number of changed lines vs companion's workflow:
-   gh api repos/<OWNER>/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
+   gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
      --jq .content | base64 -d > /tmp/companion-onboard-final.yml
    diff /tmp/companion-onboard-final.yml .github/workflows/onboard.yml | grep -c '^[<>]'
    Report the number. This is the headline for PR 2's ADAPTATION.md thesis.
@@ -663,7 +665,7 @@ Stop. You are re-authoring the workflow from scratch.
 This violates the pattern-transfer story. Reset:
 1. `rm .github/workflows/onboard.yml`
 2. Re-fetch companion's workflow:
-   gh api repos/<OWNER>/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
+   gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
      --jq .content | base64 -d > /tmp/companion-onboard.yml
 3. cp /tmp/companion-onboard.yml .github/workflows/onboard.yml
 4. NOW apply only the per-service input changes from Turn 1.2. Nothing else.
@@ -684,7 +686,7 @@ Action:
 2. Identify every sentence in your current ADAPTATION.md draft that explains
    how the action chain works, what bootstrap does, what repo-sync does, or
    anything else that would also be true for the payments repo.
-3. Cut all of it. Replace with: "See <COMPANION_REPO_URL> for the canonical
+3. Cut all of it. Replace with: "See https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding for the canonical
    pattern."
 4. Show me the trimmed version.
 

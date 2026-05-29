@@ -3,6 +3,12 @@
 > Honest documentation of issues encountered during build.
 > Append-only. Each entry is dated and specific. This feeds the README's
 > "Known Issues and Resolutions" and "AI Assistance" sections — both graded.
+>
+> This build inherited the companion's five verified fixes pre-applied
+> (variables-write, spec-url, gh-fallback-token, PAT verification, PAT rename),
+> so onboarding was one-shot — those iterations did not recur here. The
+> companion (`jr-cse-payments-postman-onboarding`) `issues-log.md` documents
+> them. Entries below are loan-specific only.
 
 ---
 

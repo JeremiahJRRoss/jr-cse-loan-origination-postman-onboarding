@@ -167,12 +167,6 @@ Even now decoded, that workflow's "Resolve Postman Resource IDs" step reads the 
   secrets. Correct behavior, not a gap.
 
 ### What AI got wrong (and I corrected)
-- **AI initially suggested re-authoring the workflow from scratch** rather
-  than copying the companion's and diffing the inputs. Corrected: the
-  pattern-transfer story is undermined by parallel authorship. Copy-then-diff
-  makes "how little changed" measurable. This was a deliberate process
-  decision, not a bug, but worth surfacing as an example of why I held the
-  line on the copy approach.
 - All five corrections from the companion's AI disclosure apply identically
   to this repo's workflow file (variables-write, spec-url, gh-fallback-token,
   PAT verification, PAT name-scoping on rename). See the companion's §14 for

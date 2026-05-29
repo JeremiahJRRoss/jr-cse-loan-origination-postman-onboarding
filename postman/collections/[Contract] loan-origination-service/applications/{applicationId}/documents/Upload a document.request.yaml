@@ -16,7 +16,7 @@ body:
     - key: file
       type: file
     - key: documentType
-      value: bank_statement
+      value: income_verification
       type: text
 scripts:
   - type: afterResponse
@@ -91,7 +91,7 @@ examples:
             "applicationId": "string",
             "documentType": "string",
             "fileName": "string",
-            "uploadedAt": "1968-08-28T18:17:37.075Z",
+            "uploadedAt": "2024-07-21T20:36:36.763Z",
             "verificationStatus": "pending"
           }
       headers:

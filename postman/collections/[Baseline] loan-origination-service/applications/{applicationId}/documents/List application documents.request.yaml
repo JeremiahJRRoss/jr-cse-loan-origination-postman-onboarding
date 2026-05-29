@@ -21,7 +21,7 @@ examples:
               "applicationId": "string",
               "documentType": "string",
               "fileName": "string",
-              "uploadedAt": "1979-12-22T12:09:14.538Z",
+              "uploadedAt": "1997-08-16T19:58:38.843Z",
               "verificationStatus": "pending"
             },
             {
@@ -29,7 +29,7 @@ examples:
               "applicationId": "string",
               "documentType": "string",
               "fileName": "string",
-              "uploadedAt": "1956-06-30T08:47:10.755Z",
+              "uploadedAt": "1990-06-01T16:18:26.625Z",
               "verificationStatus": "verified"
             }
           ]

@@ -16,7 +16,7 @@ body:
     - key: file
       type: file
     - key: documentType
-      value: bank_statement
+      value: identity
       type: text
 scripts:
   - type: afterResponse
@@ -48,8 +48,8 @@ examples:
             "applicationId": "string",
             "documentType": "string",
             "fileName": "string",
-            "uploadedAt": "1990-04-04T11:05:03.886Z",
-            "verificationStatus": "rejected"
+            "uploadedAt": "1967-05-18T07:26:32.108Z",
+            "verificationStatus": "pending"
           }
       headers:
         - key: Content-Type

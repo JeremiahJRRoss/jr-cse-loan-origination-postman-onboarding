@@ -88,9 +88,9 @@ plus two loan-specific checks (multipart endpoint, JWT-not-mTLS auth wiring).
 
 ## 6. Validation Evidence
 
-**Workspace:** [LND] loan-origination-service ([open in Postman](https://go.postman.co/workspace/<YOUR_WORKSPACE_ID>))
+**Workspace:** [LND] loan-origination-service ([open in Postman](https://go.postman.co/workspace/6938ecca-fd61-4488-b325-bb022c7e5b83))
 
-**Latest green run:** https://github.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/actions/runs/<RUN_ID>
+**Latest green run:** https://github.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/actions/runs/26613650633
 
 **Committed artifacts:**
 - [`postman/collections/`](postman/collections/) — three JSON exports

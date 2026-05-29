@@ -171,8 +171,8 @@ These are documented in `README.md §7` as expected upstream behavior.
 
 ## Step 6 — Sync local working tree
 
-The action commits the generated CI workflow and the collection JSON exports
-back to `main`. Pull them down:
+The action commits the generated CI workflow and the git-sync YAML collections
+(`postman/collections/`) back to `main`. Pull them down:
 
 ```bash
 cd ~/Desktop/jr-cse-loan-origination-postman-onboarding
@@ -184,8 +184,12 @@ ls .github/workflows/
 
 Expected:
 - `git log` shows a commit by `Postman CSE <help@postman.com>` titled "chore: sync Postman artifacts and metadata"
-- `postman/collections/` contains 3 JSON files (Baseline, Contract, Smoke)
+- `postman/collections/` contains 3 git-sync YAML collections (Baseline, Contract, Smoke)
 - `.github/workflows/` contains both `onboard.yml` AND `loan-origination-tests.yml`
+
+> The single-file JSON exports in `postman/exports/` (`baseline.json`,
+> `contract.json`, `smoke.json`) hold these same three collections, committed
+> separately per the brief — not produced by the action's sync.
 
 ---
 

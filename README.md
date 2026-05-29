@@ -88,29 +88,16 @@ plus two loan-specific checks (multipart endpoint, JWT-not-mTLS auth wiring).
 
 ## 6. Validation Evidence
 
-<!-- TODO: after running the workflow, replace this block with:
+**Workspace:** [LND] loan-origination-service ([open in Postman](https://go.postman.co/workspace/<YOUR_WORKSPACE_ID>))
 
-**Workspace:** [LND] loan-origination-service ([open in Postman](https://go.postman.co/workspace/<NEW_WORKSPACE_ID>))
-
-**First green run:** https://github.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/actions/runs/<RUN_ID>
+**Latest green run:** https://github.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/actions/runs/<RUN_ID>
 
 **Committed artifacts:**
 - [`postman/collections/`](postman/collections/) — three JSON exports
 - [`.github/workflows/loan-origination-tests.yml`](.github/workflows/loan-origination-tests.yml) — generated CI workflow
 
-**Screenshots from the validated workspace:**
+**Walkthrough with all five screenshots:** [`docs/VALIDATION-EVIDENCE.md`](docs/VALIDATION-EVIDENCE.md)
 
-![Workspace home — three collections, three environments, mock and monitor](docs/screenshots/workspace-home.png)
-
-![Spec Hub — Loan Origination API v1.4.0 rendered](docs/screenshots/spec-hub.png)
-
-![Baseline collection — POST /applications/{id}/documents with multipart body](docs/screenshots/baseline-collection.png)
-
-![Environments — three envs with lending-api base URLs](docs/screenshots/environments.png)
-
-![Monitor — scheduled execution against the mock](docs/screenshots/monitor.png)
-
--->
 
 ## 7. Known Issues and Resolutions
 

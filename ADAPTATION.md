@@ -8,22 +8,21 @@ How the onboarding pattern transferred from Payments to Loan Origination.
 ## 1. Thesis
 
 The pattern transfers from the canonical Payments implementation
-(`jr-cse-payments-postman-onboarding`) to Loan Origination with **`<N>`**
-lines of workflow YAML changed and **four** customer-side follow-up items.
+(`jr-cse-payments-postman-onboarding`) to Loan Origination with **8** per-service
+input values changed and **four** customer-side follow-up items.
 
 **Compute (ECS+ALB vs Lambda+API Gateway) and declared auth (JWT vs OAuth+JWT)
 are configuration, not structural concerns, at the onboarding layer.** The
 workflow file is structurally identical to the companion's; only the
 per-service input values differ.
 
-<!-- TODO: replace `<N>` with the measured line count after both repos are green:
-
-  cd ~/Desktop/jr-cse-loan-origination-postman-onboarding
-  gh api repos/JeremiahJRRoss/jr-cse-payments-postman-onboarding/contents/.github/workflows/onboard.yml \
-    --jq .content | base64 -d > /tmp/companion.yml
-  diff /tmp/companion.yml .github/workflows/onboard.yml | grep -c '^<'
-
--->
+**8 per-service input values differ** between the two workflows
+(`project-name`, `domain`, `domain-code`, `spec-url`, `spec-path`,
+`environments-json`, `env-runtime-urls-json`, `ci-workflow-path`) — 0 structural
+lines. The raw textual `diff` is larger (33 lines; see §3) only because this
+repo's workflow carries extra explanatory comments (the per-service-deltas and
+mTLS blocks) that the companion's doesn't. The 8 is the thesis number; the 33 is
+what `diff … | grep -c '^<'` (SETUP Step 8) reports.
 
 ## 2. The diff matrix
 
@@ -41,7 +40,7 @@ running Postman workspaces. Predictions are flagged as such.
 | Environments | prod / uat / qa / dev (4) | prod / staging / dev (3) | Config (per service) |
 | Server URL pattern | api.payments.example.com | lending-api.example.com | Config |
 | Workflow file structural changes | n/a (baseline) | 0 | **None** |
-| Workflow file input changes | n/a (baseline) | `<N>` lines (see §1) | Config |
+| Workflow file input changes | n/a (baseline) | 8 input-value lines (see §1) | Config |
 | Action ref | `postman-cs/postman-api-onboarding-action@v0` | Same | None |
 | Job permissions block | `actions: write, contents: write` | Same | None |
 | Generated collection count | 3 (Baseline / Smoke / Contract) | 3 (same) | None |
@@ -51,7 +50,7 @@ running Postman workspaces. Predictions are flagged as such.
 | Secret references | `POSTMAN_API_KEY`, `POSTMAN_ACCESS_TOKEN`, `GH_FALLBACK_TOKEN` | Same | None |
 | Identity variables | `REQUESTER_EMAIL`, `POSTMAN_USER_ID` | Same | None |
 
-**Rows that move:** auth-at-runtime, file-upload-endpoints, environments-count, environment-URLs, `ci-workflow-path`, the four per-service input lines (project-name, domain, domain-code, both spec paths).
+**Rows that move:** auth-at-runtime and file-upload-endpoints (both downstream of onboarding, not workflow-input changes), plus the **8** per-service input values that differ in `onboard.yml` (`project-name`, `domain`, `domain-code`, `spec-url`, `spec-path`, `environments-json`, `env-runtime-urls-json`, `ci-workflow-path`).
 
 **Rows that don't move:** everything else.
 
@@ -210,10 +209,12 @@ auth.
 ## 5. What this proves about the pattern
 
 **The workflow shape is genuinely reusable.** The diff between the two
-onboarding workflows is `<N>` lines of per-service configuration — every line
-of structural plumbing (job definition, permissions, action ref, secret
-wiring, output printing) is identical. A pilot team can onboard service #3,
-#4, ... #50 by copying this workflow, swapping seven inputs (project-name,
+onboarding workflows is **8** lines of per-service configuration (the raw
+textual diff runs to 33 lines — the remainder are explanatory comments,
+reconciled in §1) — every line of structural plumbing (job definition,
+permissions, action ref, secret wiring, output printing) is identical. A pilot
+team can onboard service #3, #4, ... #50 by copying this workflow, swapping
+eight inputs (project-name,
 domain, domain-code, spec-url, spec-path, environments-json,
 env-runtime-urls-json, ci-workflow-path), and pushing.
 

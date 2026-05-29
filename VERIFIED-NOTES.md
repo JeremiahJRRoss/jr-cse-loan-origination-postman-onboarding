@@ -1,23 +1,27 @@
 # Verified Action Contract Notes
 
-Captured by inspecting `postman-cs/postman-api-onboarding-action/action.yml` and
-README directly. Where these notes conflict with BLUEPRINT.md / PROMPTS.md (written
-earlier), **these notes win** — they're from the live action.
+Captured by inspecting `postman-cs/postman-api-onboarding-action/action.yml` and its
+README directly. The source of truth for what *this* repo actually does is its own
+`.github/workflows/onboard.yml`; where these notes once conflicted with it, they have
+been corrected to match.
 
 ## Version pin
 - Only `@v0` exists (rolling open-alpha). No immutable `v0.x.y` tags published yet.
 - Earlier docs referencing `@v1` were wrong. Use `@v0`.
 
 ## Spec input: spec-path vs spec-url
-- The action accepts EITHER `spec-url` (fetchable HTTPS) OR `spec-path` (repo-root
+- The action accepts `spec-url` (fetchable HTTPS) and/or `spec-path` (repo-root
   relative, read from the checked-out workspace).
-- This scaffold uses **`spec-path`** — more robust, no dependency on the raw URL
-  being reachable/public before the run.
+- This scaffold's `onboard.yml` provides **both** `spec-url` and `spec-path` — the
+  URL for fetchability, the path as the robust local fallback when the raw URL
+  isn't reachable/public before the run.
 
 ## Permissions
-- Needs `actions: write`, `contents: write`, AND `variables: write`.
-  The `variables: write` is what lets the action persist workspace/spec/collection
-  IDs as repo variables for idempotent re-runs.
+- Needs `actions: write` and `contents: write` only. There is **no `variables: write`
+  permission key** in GitHub Actions — it's a parse error. Repo variables (workspace/
+  spec/collection IDs for idempotent re-runs) are persisted via the `github-token` /
+  `gh-fallback-token` input (action.yml: "GitHub token used for repo variables and
+  generated commits"), not via a workflow permission.
 
 ## ci-workflow-path
 - Default is `.github/workflows/ci.yml` (NOT `onboard.yml`). The earlier

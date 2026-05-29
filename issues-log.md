@@ -30,3 +30,9 @@
 **Error:** Its "Resolve Postman Resource IDs" step does `YAML.load_file('.postman/resources.yaml')` and aborts when missing; `.postman/` is gitignored and untracked, and the spec environments target `example.com`.
 **Changed:** Documented as a known limitation (README §7.C) — Option C, mirroring the companion's layer-2 decision. No un-ignore here. One-line customer fix: un-ignore `.postman/`.
 **Source of fix:** mirror of companion decision (see companion blueprint §3 options table).
+
+### 2026-05-29 — VERIFIED-NOTES.md carried two stale claims contradicting onboard.yml
+**Tried:** Reconciling `VERIFIED-NOTES.md` against the committed `onboard.yml`.
+**Error:** Claimed a `variables: write` permission (no such GitHub Actions key — parse error) and that the scaffold "uses spec-path" only, while `onboard.yml` provides both `spec-url` and `spec-path`.
+**Changed:** Corrected both claims in place and demoted the header's authority line to point at `onboard.yml` as the source of truth. Chose correct-in-place (parity) over delete; companion's outcome unverifiable this session (out of scope).
+**Source of fix:** verified against `onboard.yml` + action.yml ("GitHub token used for repo variables and generated commits").

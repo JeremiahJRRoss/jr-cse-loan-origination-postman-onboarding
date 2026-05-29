@@ -189,6 +189,12 @@ makes the pattern-transfer claim falsifiable rather than rhetorical.
 See the companion's `README.md §14` for the canonical AI disclosure with
 specific corrections traceable to `issues-log.md`.
 
+## 9. Recommended future changes (productionizing)
+
+The productionizing roadmap is shared with the canonical repo — the recommendations are **action-level**, so they apply identically here. See [`jr-cse-payments-postman-onboarding`](https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding) README → **"Recommended future changes"**: idempotent re-runs (reuse-or-clean guard), self-healing CI-workflow generation, clean-checkout resource resolution, and dropping the public-URL spec dependency. These are scoped-out of the take-home deliberately — named and scoped, not built.
+
+Loan-specific future items — mTLS client-cert provisioning for CI and monitor source-IP allowlisting for the network-restricted endpoints — are already scoped in [`ADAPTATION.md`](ADAPTATION.md) (§4.1, §4.4); not restated here.
+
 ## References
 
 - **Companion repo (canonical pattern):** https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding

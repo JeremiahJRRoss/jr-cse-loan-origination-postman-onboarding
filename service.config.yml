@@ -1,0 +1,66 @@
+# service.config.yml — per-service onboarding inputs (no secrets)
+#
+# Companion (canonical pattern): jr-cse-payments-postman-onboarding
+
+service:
+  name: loan-origination-service
+  domain: lending
+  domain_code: LND
+
+spec:
+  path: specs/loan-origination-api-openapi.yaml
+  title: "Lending Platform API - Loan Origination Service"
+  version: "1.4.0"
+  auth_declared: "JWT (securitySchemes); mTLS mentioned in description prose only"
+  compute: "ECS + ALB"
+
+environments:
+  - prod
+  - staging
+  - dev
+
+environment_urls:
+  prod:    https://lending-api.example.com/v1
+  staging: https://lending-api-staging.example.com/v1
+  dev:     https://lending-api-dev.example.com/v1
+
+ci_workflow:
+  generate: true
+  path: .github/workflows/loan-origination-tests.yml
+
+# Adaptation notes — what differs from the Payments baseline:
+adaptation_notes:
+  compute:
+    payments: lambda + api gateway
+    loan_origination: ecs + alb
+    impact_on_onboarding: none (compute is downstream of catalog onboarding)
+
+  auth_declared_in_spec:
+    payments: oauth2 + jwt
+    loan_origination: jwt only
+    impact_on_onboarding: one fewer auth scheme in generated collection; env setup differs
+
+  auth_at_runtime:
+    payments: oauth2 client credentials
+    loan_origination: mtls + jwt
+    impact_on_onboarding: >
+      mTLS declared in spec info.description text only, NOT in securitySchemes.
+      Generated collection wires JWT, not mTLS. The action accepts client cert
+      material via ssl-client-cert / ssl-client-key (base64 PEM) and passes it to
+      repo-sync for CI workflow generation. Customer provides cert material as
+      secrets. See ADAPTATION.md.
+
+  file_uploads:
+    payments: none
+    loan_origination: "POST /applications/{id}/documents (multipart/form-data)"
+    impact_on_onboarding: validate generated baseline collection handles multipart; patch if needed
+
+  environments:
+    payments: prod/uat/qa/dev (4)
+    loan_origination: prod/staging/dev (3)
+    impact_on_onboarding: config only
+
+  network_restrictions:
+    payments: not specified
+    loan_origination: likely (mTLS endpoints typically allowlist-only)
+    customer_ask: allowlist Postman monitor source IPs

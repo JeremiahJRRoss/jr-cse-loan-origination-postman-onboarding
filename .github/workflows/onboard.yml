@@ -1,0 +1,89 @@
+name: Onboard Loan Origination Service to Postman
+
+# Onboards the Loan Origination API into Postman via the open-alpha orchestrator.
+# STRUCTURAL COPY of the companion (jr-cse-payments-postman-onboarding) workflow.
+# Only per-service inputs differ — that's the pattern-transfer thesis, measured.
+#
+# All five iteration fixes from companion are pre-applied. First green run
+# should be one-shot. See ADAPTATION.md for the measured diff vs companion.
+#
+# BEFORE FIRST RUN — see SETUP.md. Required configuration:
+#   Secrets:   POSTMAN_API_KEY, POSTMAN_ACCESS_TOKEN, GH_FALLBACK_TOKEN
+#              (PAT must include this repo in its access list — see SETUP §2)
+#   Variables: REQUESTER_EMAIL, POSTMAN_USER_ID
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'specs/loan-origination-api-openapi.yaml'
+      - '.github/workflows/onboard.yml'
+
+jobs:
+  onboard:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write      # action triggers the generated CI workflow
+      contents: write     # action commits generated collections back
+      # NOTE: 'variables: write' is NOT a valid permission key in GitHub Actions.
+      # Repo variables are written via GITHUB_TOKEN's standard scopes, not job perms.
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Onboard Loan Origination service into Postman
+        id: onboard
+        uses: postman-cs/postman-api-onboarding-action@v0
+        with:
+          # --- per-service deltas vs companion (jr-cse-payments-postman-onboarding) workflow ---
+          project-name: loan-origination-service           # was payment-refund-service
+          domain: lending                                   # was payments
+          domain-code: LND                                  # was PMT
+          spec-url: https://raw.githubusercontent.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/main/specs/loan-origination-api-openapi.yaml
+          spec-path: specs/loan-origination-api-openapi.yaml
+          environments-json: '["prod","staging","dev"]'    # was prod/uat/qa/dev (3 envs, not 4)
+          env-runtime-urls-json: '{"prod":"https://lending-api.example.com/v1","staging":"https://lending-api-staging.example.com/v1","dev":"https://lending-api-dev.example.com/v1"}'
+          ci-workflow-path: .github/workflows/loan-origination-tests.yml
+          # --- everything below is identical to companion ---
+
+          requester-email: ${{ vars.REQUESTER_EMAIL }}
+          workspace-admin-user-ids: ${{ vars.POSTMAN_USER_ID }}
+          generate-ci-workflow: true
+
+          # --- ORG-MODE TEAMS ONLY (same as companion) ---
+          # Uncomment if first run errors on team/org. Set POSTMAN_TEAM_ID variable first.
+          # org-mode: true
+          # workspace-team-id: ${{ vars.POSTMAN_TEAM_ID }}
+
+          # --- mTLS (customer-side cert provisioning, OPTIONAL) ---
+          # The spec declares only JWT in securitySchemes (mTLS lives in
+          # info.description prose). The generated COLLECTION wires JWT, which
+          # is correct behavior given the spec. The action DOES accept client
+          # cert material as base64 PEM via ssl-client-* inputs and passes it
+          # to repo-sync for the generated CI test workflow. To wire mTLS at
+          # runtime, customer provisions cert material as secrets and
+          # uncomments the lines below:
+          # ssl-client-cert: ${{ secrets.SSL_CLIENT_CERT_B64 }}
+          # ssl-client-key: ${{ secrets.SSL_CLIENT_KEY_B64 }}
+          # ssl-client-passphrase: ${{ secrets.SSL_CLIENT_PASSPHRASE }}
+
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          postman-access-token: ${{ secrets.POSTMAN_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # REQUIRED: see companion's onboard.yml for the rationale.
+          # Default GITHUB_TOKEN cannot write to .github/workflows/; this PAT
+          # gives the action the ability to materialize the generated CI workflow.
+          gh-fallback-token: ${{ secrets.GH_FALLBACK_TOKEN }}
+
+      - name: Print onboarding outputs
+        if: always()
+        run: |
+          echo "workspace-url:  ${{ steps.onboard.outputs.workspace-url }}"
+          echo "workspace-id:   ${{ steps.onboard.outputs.workspace-id }}"
+          echo "spec-id:        ${{ steps.onboard.outputs.spec-id }}"
+          echo "mock-url:       ${{ steps.onboard.outputs.mock-url }}"
+          echo "monitor-id:     ${{ steps.onboard.outputs.monitor-id }}"
+          echo "collections:    ${{ steps.onboard.outputs.collections-json }}"
+          echo "bootstrap:      ${{ steps.onboard.outputs.bootstrap-outcome }}"
+          echo "repo-sync:      ${{ steps.onboard.outputs.repo-sync-outcome }}"

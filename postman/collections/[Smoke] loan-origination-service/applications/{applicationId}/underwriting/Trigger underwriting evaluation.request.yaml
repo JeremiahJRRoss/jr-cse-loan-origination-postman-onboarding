@@ -44,10 +44,10 @@ examples:
         content: |-
           {
             "applicationId": "string",
-            "status": "completed",
-            "decision": "denied",
-            "riskScore": 43,
-            "evaluatedAt": "1997-07-22T07:51:50.857Z"
+            "status": "failed",
+            "decision": "approved",
+            "riskScore": 66,
+            "evaluatedAt": "2002-03-20T19:29:16.092Z"
           }
       headers:
         - key: Content-Type

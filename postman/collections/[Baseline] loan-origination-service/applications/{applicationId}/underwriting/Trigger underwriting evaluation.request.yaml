@@ -26,10 +26,10 @@ examples:
         content: |-
           {
             "applicationId": "string",
-            "status": "failed",
-            "decision": "denied",
-            "riskScore": 31,
-            "evaluatedAt": "1982-01-31T06:02:18.122Z"
+            "status": "completed",
+            "decision": "referred_to_manual",
+            "riskScore": 18,
+            "evaluatedAt": "2012-01-30T13:40:52.594Z"
           }
       headers:
         - key: Content-Type

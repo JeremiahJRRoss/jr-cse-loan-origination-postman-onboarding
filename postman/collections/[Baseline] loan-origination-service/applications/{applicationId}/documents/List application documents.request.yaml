@@ -21,16 +21,16 @@ examples:
               "applicationId": "string",
               "documentType": "string",
               "fileName": "string",
-              "uploadedAt": "1972-07-29T10:22:00.057Z",
-              "verificationStatus": "rejected"
+              "uploadedAt": "1979-12-22T12:09:14.538Z",
+              "verificationStatus": "pending"
             },
             {
               "id": "string",
               "applicationId": "string",
               "documentType": "string",
               "fileName": "string",
-              "uploadedAt": "1952-10-25T02:44:20.574Z",
-              "verificationStatus": "rejected"
+              "uploadedAt": "1956-06-30T08:47:10.755Z",
+              "verificationStatus": "verified"
             }
           ]
       headers:

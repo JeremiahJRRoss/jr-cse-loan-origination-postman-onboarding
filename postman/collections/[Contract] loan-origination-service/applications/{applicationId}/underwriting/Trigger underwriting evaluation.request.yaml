@@ -87,10 +87,10 @@ examples:
         content: |-
           {
             "applicationId": "string",
-            "status": "failed",
-            "decision": "referred_to_manual",
-            "riskScore": 86,
-            "evaluatedAt": "2004-09-07T21:00:44.531Z"
+            "status": "pending",
+            "decision": "denied",
+            "riskScore": 9,
+            "evaluatedAt": "1997-05-16T20:07:52.848Z"
           }
       headers:
         - key: Content-Type

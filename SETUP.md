@@ -217,7 +217,7 @@ Find the workspace whose name begins with `[LND]` — likely `[LND] loan-origina
 ### Two loan-specific additional checks
 
 1. **Multipart file upload endpoint.** Open the Baseline collection, find
-   `POST /applications/{id}/documents`. Confirm the request body shows
+   `POST /applications/{applicationId}/documents`. Confirm the request body shows
    multipart form-data with a `file` part defined. This is the spec-specific
    detail that's worth noting in ADAPTATION.md follow-ups if the generator
    handled it differently than expected.
@@ -249,8 +249,9 @@ diff /tmp/companion-onboard.yml .github/workflows/onboard.yml
 diff /tmp/companion-onboard.yml .github/workflows/onboard.yml | grep -c '^<'
 ```
 
-Write that number down. Replace the `<N>` placeholders in `ADAPTATION.md` §1
-and §3 with the real value.
+Write that number down. `ADAPTATION.md` §1 and §3 record it: **8** per-service
+input values (the raw `grep -c '^<'` count is 33 — the remainder are the extra
+explanatory comments, reconciled in §1).
 
 ---
 
@@ -261,7 +262,7 @@ space → click window:
 
 1. `workspace-home.png` — sidebar showing all artifacts
 2. `spec-hub.png` — Loan Origination spec rendered
-3. `baseline-collection.png` — POST `/applications/{id}/documents` expanded
+3. `baseline-collection.png` — POST `/applications/{applicationId}/documents` expanded
    (the multipart endpoint — the visually distinctive shot)
 4. `environments.png` — three environments with lending-api URLs
 5. `monitor.png` — the monitor's status page
@@ -284,15 +285,14 @@ Update README §6 with the new workspace URL and run URL.
 
 ## Step 10 — Fill in ADAPTATION.md
 
-This is the principal artifact in this repo. Open `ADAPTATION.md` and replace
-the `<N>` placeholders in §1 (thesis) and §3 (matrix). Add any loan-specific
-findings (e.g., multipart endpoint observation, mTLS verification).
+This is the principal artifact in this repo. `ADAPTATION.md` §1 (thesis) and §3
+(matrix) already record the measured number (**8** input values). Add any
+loan-specific findings (e.g., multipart endpoint observation, mTLS verification).
 
 ```bash
 cd ~/Desktop/jr-cse-loan-origination-postman-onboarding
-sed -i '' "s/<N>/<your-line-count>/g" ADAPTATION.md
 git add ADAPTATION.md
-git commit -m "docs: ADAPTATION.md — pattern transfers with <N> lines changed"
+git commit -m "docs: ADAPTATION.md — pattern transfers with 8 input values changed"
 git push
 ```
 
@@ -317,7 +317,7 @@ section apply here identically. If you hit:
 - [ ] All steps 1-10 completed
 - [ ] Six Postman UI checks passed + two loan-specific checks (Step 7)
 - [ ] Five validation screenshots committed
-- [ ] ADAPTATION.md `<N>` placeholders filled with real line counts
+- [ ] ADAPTATION.md line-count placeholders filled with real numbers (8 input values)
 - [ ] Companion repo (Payments) is also green and validated
 
 Once both repos are submission-ready, you have the full pattern-transfer

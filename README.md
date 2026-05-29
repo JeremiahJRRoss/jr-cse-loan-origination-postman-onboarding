@@ -93,7 +93,8 @@ plus two loan-specific checks (multipart endpoint, JWT-not-mTLS auth wiring).
 **Latest green run:** https://github.com/JeremiahJRRoss/jr-cse-loan-origination-postman-onboarding/actions/runs/26613650633
 
 **Committed artifacts:**
-- [`postman/collections/`](postman/collections/) — three JSON exports
+- [`postman/collections/`](postman/collections/) — three git-sync YAML collections (canonical, action-managed: Baseline, Contract, Smoke)
+- [`postman/exports/`](postman/exports/) — the same three collections as single-file v2.1 JSON exports (`baseline.json`, `contract.json`, `smoke.json`), provided per the brief
 - [`.github/workflows/loan-origination-tests.yml`](.github/workflows/loan-origination-tests.yml) — generated CI workflow
 
 **Walkthrough with all five screenshots:** [`docs/VALIDATION-EVIDENCE.md`](docs/VALIDATION-EVIDENCE.md)

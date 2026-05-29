@@ -1,0 +1,1109 @@
+{
+  "info": {
+    "_postman_id": "04a209bc-6594-400a-909b-041f69d12b1d",
+    "name": "[Baseline] loan-origination-service",
+    "description": "API for managing loan application origination, underwriting decisions, and\ndocument collection in the Lending domain. This service handles the full\nlifecycle from application submission through approval or denial.\n\n**Authentication:**\n- Service-to-service: mTLS (mutual TLS)\n- Internal gateway: JWT token (Bearer token)\n\n**Rate Limits:**\n- Standard: 200 requests/minute\n- Batch operations: 50 requests/minute\n\n\nContact Support:\n Name: Lending Platform Team\n Email: lending-platform@example.com",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-05-29T17:51:36.000Z",
+    "updatedAt": "2026-05-29T17:51:51.000Z",
+    "lastUpdatedBy": "38960911",
+    "uid": "38960911-04a209bc-6594-400a-909b-041f69d12b1d"
+  },
+  "item": [
+    {
+      "name": "applications",
+      "item": [
+        {
+          "name": "{applicationId}",
+          "item": [
+            {
+              "name": "underwriting",
+              "item": [
+                {
+                  "name": "Trigger underwriting evaluation",
+                  "id": "3ba0654a-357a-4f89-bb13-bd62304e17f7",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"reevaluationReason\": \"string\",\n  \"includeManualReview\": false\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/applications/:applicationId/underwriting",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "applications",
+                        ":applicationId",
+                        "underwriting"
+                      ],
+                      "variable": [
+                        {
+                          "key": "applicationId",
+                          "value": "string"
+                        }
+                      ]
+                    },
+                    "description": "Initiates or re-initiates the underwriting evaluation for an application.\nThis is normally triggered automatically on application submission but\ncan be manually invoked for re-evaluation after document updates.\n"
+                  },
+                  "response": [
+                    {
+                      "id": "0d21d538-a7b8-4eaa-86a6-0b71030df661",
+                      "name": "Underwriting evaluation queued",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"reevaluationReason\": \"string\",\n  \"includeManualReview\": false\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/applications/:applicationId/underwriting",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "applications",
+                            ":applicationId",
+                            "underwriting"
+                          ],
+                          "variable": [
+                            {
+                              "key": "applicationId",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Accepted",
+                      "code": 202,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"applicationId\": \"string\",\n  \"status\": \"in_progress\",\n  \"decision\": \"approved\",\n  \"riskScore\": 42,\n  \"evaluatedAt\": \"1970-01-24T03:45:40.874Z\"\n}",
+                      "createdAt": "2026-05-29T17:51:36.000Z",
+                      "updatedAt": "2026-05-29T17:51:36.000Z",
+                      "uid": "38960911-0d21d538-a7b8-4eaa-86a6-0b71030df661"
+                    },
+                    {
+                      "id": "c59d1036-0dba-4a71-97e3-8d443beb0300",
+                      "name": "Application not found",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"reevaluationReason\": \"string\",\n  \"includeManualReview\": false\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/applications/:applicationId/underwriting",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "applications",
+                            ":applicationId",
+                            "underwriting"
+                          ],
+                          "variable": [
+                            {
+                              "key": "applicationId",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-05-29T17:51:36.000Z",
+                      "updatedAt": "2026-05-29T17:51:36.000Z",
+                      "uid": "38960911-c59d1036-0dba-4a71-97e3-8d443beb0300"
+                    },
+                    {
+                      "id": "566f48b4-85f1-4d76-9a32-5c72b12928c4",
+                      "name": "Underwriting already in progress",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"reevaluationReason\": \"string\",\n  \"includeManualReview\": false\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/applications/:applicationId/underwriting",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "applications",
+                            ":applicationId",
+                            "underwriting"
+                          ],
+                          "variable": [
+                            {
+                              "key": "applicationId",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Conflict",
+                      "code": 409,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-05-29T17:51:36.000Z",
+                      "updatedAt": "2026-05-29T17:51:36.000Z",
+                      "uid": "38960911-566f48b4-85f1-4d76-9a32-5c72b12928c4"
+                    }
+                  ],
+                  "createdAt": "2026-05-29T17:51:36.000Z",
+                  "updatedAt": "2026-05-29T17:51:36.000Z",
+                  "uid": "38960911-3ba0654a-357a-4f89-bb13-bd62304e17f7"
+                }
+              ],
+              "id": "283872f0-bd00-4aa5-9ae0-077b1564db4c",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-283872f0-bd00-4aa5-9ae0-077b1564db4c"
+            },
+            {
+              "name": "documents",
+              "item": [
+                {
+                  "name": "Upload a document",
+                  "id": "0eb3dedf-1be3-4715-998e-98f06d04aa77",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "multipart/form-data"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file"
+                        },
+                        {
+                          "key": "documentType",
+                          "value": "bank_statement",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/applications/:applicationId/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "applications",
+                        ":applicationId",
+                        "documents"
+                      ],
+                      "variable": [
+                        {
+                          "key": "applicationId",
+                          "value": "string"
+                        }
+                      ]
+                    },
+                    "description": "Uploads a supporting document for a loan application (income verification, ID, bank statements, etc.)"
+                  },
+                  "response": [
+                    {
+                      "id": "9600b85a-0141-4b93-8e3b-d7bc56a3a937",
+                      "name": "Document uploaded successfully",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "multipart/form-data"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "file",
+                              "type": "file"
+                            },
+                            {
+                              "key": "documentType",
+                              "value": "bank_statement",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/applications/:applicationId/documents",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "applications",
+                            ":applicationId",
+                            "documents"
+                          ],
+                          "variable": [
+                            {
+                              "key": "applicationId",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Created",
+                      "code": 201,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"id\": \"string\",\n  \"applicationId\": \"string\",\n  \"documentType\": \"string\",\n  \"fileName\": \"string\",\n  \"uploadedAt\": \"2002-12-24T21:55:20.582Z\",\n  \"verificationStatus\": \"rejected\"\n}",
+                      "createdAt": "2026-05-29T17:51:36.000Z",
+                      "updatedAt": "2026-05-29T17:51:36.000Z",
+                      "uid": "38960911-9600b85a-0141-4b93-8e3b-d7bc56a3a937"
+                    },
+                    {
+                      "id": "5fc6486f-76f9-42f0-8fd1-cad39322cdd1",
+                      "name": "Invalid document or unsupported format",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "multipart/form-data"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "file",
+                              "type": "file"
+                            },
+                            {
+                              "key": "documentType",
+                              "value": "bank_statement",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/applications/:applicationId/documents",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "applications",
+                            ":applicationId",
+                            "documents"
+                          ],
+                          "variable": [
+                            {
+                              "key": "applicationId",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-05-29T17:51:36.000Z",
+                      "updatedAt": "2026-05-29T17:51:36.000Z",
+                      "uid": "38960911-5fc6486f-76f9-42f0-8fd1-cad39322cdd1"
+                    }
+                  ],
+                  "createdAt": "2026-05-29T17:51:36.000Z",
+                  "updatedAt": "2026-05-29T17:51:36.000Z",
+                  "uid": "38960911-0eb3dedf-1be3-4715-998e-98f06d04aa77"
+                },
+                {
+                  "name": "List application documents",
+                  "id": "e3ad3363-8464-42d5-901b-cda3525d594a",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/applications/:applicationId/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "applications",
+                        ":applicationId",
+                        "documents"
+                      ],
+                      "variable": [
+                        {
+                          "key": "applicationId",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "0fc7f3b0-6168-4d98-a553-879c4a655637",
+                      "name": "List of documents",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/applications/:applicationId/documents",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "applications",
+                            ":applicationId",
+                            "documents"
+                          ],
+                          "variable": [
+                            {
+                              "key": "applicationId",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "[\n  {\n    \"id\": \"string\",\n    \"applicationId\": \"string\",\n    \"documentType\": \"string\",\n    \"fileName\": \"string\",\n    \"uploadedAt\": \"1997-08-16T19:58:38.843Z\",\n    \"verificationStatus\": \"pending\"\n  },\n  {\n    \"id\": \"string\",\n    \"applicationId\": \"string\",\n    \"documentType\": \"string\",\n    \"fileName\": \"string\",\n    \"uploadedAt\": \"1990-06-01T16:18:26.625Z\",\n    \"verificationStatus\": \"verified\"\n  }\n]",
+                      "createdAt": "2026-05-29T17:51:36.000Z",
+                      "updatedAt": "2026-05-29T17:51:36.000Z",
+                      "uid": "38960911-0fc7f3b0-6168-4d98-a553-879c4a655637"
+                    }
+                  ],
+                  "createdAt": "2026-05-29T17:51:36.000Z",
+                  "updatedAt": "2026-05-29T17:51:36.000Z",
+                  "uid": "38960911-e3ad3363-8464-42d5-901b-cda3525d594a"
+                }
+              ],
+              "id": "1c327d03-181d-44d8-a870-4b142281ce5f",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-1c327d03-181d-44d8-a870-4b142281ce5f"
+            },
+            {
+              "name": "Get application details",
+              "id": "b89d9ad0-aec0-45de-82c1-06e231c20aac",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/applications/:applicationId",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "applications",
+                    ":applicationId"
+                  ],
+                  "variable": [
+                    {
+                      "key": "applicationId",
+                      "value": "string"
+                    }
+                  ]
+                },
+                "description": "Returns full details of a specific loan application including current status and underwriting results if available."
+              },
+              "response": [
+                {
+                  "id": "9bb433dd-ba88-465e-a7e2-5b3565692cc9",
+                  "name": "Application details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/applications/:applicationId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "applications",
+                        ":applicationId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "applicationId",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"string\",\n  \"applicantId\": \"string\",\n  \"productType\": \"string\",\n  \"requestedAmount\": 6216.6116393801385,\n  \"termMonths\": 3408,\n  \"status\": \"denied\",\n  \"createdAt\": \"1982-11-17T07:41:30.638Z\",\n  \"updatedAt\": \"1994-01-25T13:22:44.057Z\",\n  \"underwritingResult\": {\n    \"applicationId\": \"string\",\n    \"status\": \"in_progress\",\n    \"decision\": \"approved\",\n    \"riskScore\": 98,\n    \"evaluatedAt\": \"1952-04-26T01:20:54.633Z\"\n  }\n}",
+                  "createdAt": "2026-05-29T17:51:36.000Z",
+                  "updatedAt": "2026-05-29T17:51:36.000Z",
+                  "uid": "38960911-9bb433dd-ba88-465e-a7e2-5b3565692cc9"
+                },
+                {
+                  "id": "ff755912-7229-4608-ba00-b3f5f62af981",
+                  "name": "Application not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/applications/:applicationId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "applications",
+                        ":applicationId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "applicationId",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"details\": {}\n}",
+                  "createdAt": "2026-05-29T17:51:36.000Z",
+                  "updatedAt": "2026-05-29T17:51:36.000Z",
+                  "uid": "38960911-ff755912-7229-4608-ba00-b3f5f62af981"
+                }
+              ],
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-b89d9ad0-aec0-45de-82c1-06e231c20aac"
+            }
+          ],
+          "id": "4d9d9a03-2811-48c1-9e77-038fe96a3e20",
+          "createdAt": "2026-05-29T17:51:36.000Z",
+          "updatedAt": "2026-05-29T17:51:36.000Z",
+          "uid": "38960911-4d9d9a03-2811-48c1-9e77-038fe96a3e20"
+        },
+        {
+          "name": "Submit a new loan application",
+          "id": "3dc2353b-9cb4-46e4-b76a-3a9d66c3917d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicantId\": \"app_9876543210\",\n  \"productType\": \"personal_loan\",\n  \"requestedAmount\": 25000,\n  \"termMonths\": 36,\n  \"purpose\": \"debt_consolidation\",\n  \"annualIncome\": 85000,\n  \"employmentStatus\": \"full_time\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "applications"
+              ]
+            },
+            "description": "Creates a new loan application with applicant information, requested\nloan terms, and initial credit data. Triggers async underwriting\nevaluation upon successful submission.\n\n**Business Rules:**\n- Applicant must be 18+ years old\n- Requested amount must be between $1,000 and $500,000\n- One active application per applicant per product type\n"
+          },
+          "response": [
+            {
+              "id": "54d2e1d6-8278-41ae-a38e-937f41f3512b",
+              "name": "Application created successfully",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"applicantId\": \"app_9876543210\",\n  \"productType\": \"personal_loan\",\n  \"requestedAmount\": 25000,\n  \"termMonths\": 36,\n  \"purpose\": \"debt_consolidation\",\n  \"annualIncome\": 85000,\n  \"employmentStatus\": \"full_time\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/applications",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "applications"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"id\": \"string\",\n  \"applicantId\": \"string\",\n  \"productType\": \"string\",\n  \"requestedAmount\": 6216.6116393801385,\n  \"termMonths\": 3408,\n  \"status\": \"denied\",\n  \"createdAt\": \"1982-11-17T07:41:30.638Z\",\n  \"updatedAt\": \"1994-01-25T13:22:44.057Z\",\n  \"underwritingResult\": {\n    \"applicationId\": \"string\",\n    \"status\": \"in_progress\",\n    \"decision\": \"approved\",\n    \"riskScore\": 98,\n    \"evaluatedAt\": \"1952-04-26T01:20:54.633Z\"\n  }\n}",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-54d2e1d6-8278-41ae-a38e-937f41f3512b"
+            },
+            {
+              "id": "7ff5ee1a-9051-4e32-9431-23629d773db4",
+              "name": "Invalid application data",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"applicantId\": \"app_9876543210\",\n  \"productType\": \"personal_loan\",\n  \"requestedAmount\": 25000,\n  \"termMonths\": 36,\n  \"purpose\": \"debt_consolidation\",\n  \"annualIncome\": 85000,\n  \"employmentStatus\": \"full_time\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/applications",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "applications"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"details\": {}\n}",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-7ff5ee1a-9051-4e32-9431-23629d773db4"
+            },
+            {
+              "id": "15e67430-d6dd-452d-b025-9ccf93a4e575",
+              "name": "Duplicate active application exists",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"applicantId\": \"app_9876543210\",\n  \"productType\": \"personal_loan\",\n  \"requestedAmount\": 25000,\n  \"termMonths\": 36,\n  \"purpose\": \"debt_consolidation\",\n  \"annualIncome\": 85000,\n  \"employmentStatus\": \"full_time\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/applications",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "applications"
+                  ]
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"details\": {}\n}",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-15e67430-d6dd-452d-b025-9ccf93a4e575"
+            }
+          ],
+          "createdAt": "2026-05-29T17:51:36.000Z",
+          "updatedAt": "2026-05-29T17:51:36.000Z",
+          "uid": "38960911-3dc2353b-9cb4-46e4-b76a-3a9d66c3917d"
+        },
+        {
+          "name": "List loan applications",
+          "id": "cde61e44-d162-4bc5-9eeb-d6cd6de22eb8",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/applications?status=submitted&productType=business_loan&limit=25&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "applications"
+              ],
+              "query": [
+                {
+                  "description": "Filter by application status",
+                  "key": "status",
+                  "value": "submitted"
+                },
+                {
+                  "description": "Filter by loan product type",
+                  "key": "productType",
+                  "value": "business_loan"
+                },
+                {
+                  "key": "limit",
+                  "value": "25"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Returns a paginated list of loan applications with optional filtering."
+          },
+          "response": [
+            {
+              "id": "e7e4f5c7-10ee-40fe-bab0-f9299fe2f5ef",
+              "name": "List of applications",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/applications?status=submitted&productType=business_loan&limit=25&offset=0",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "applications"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter by application status",
+                      "key": "status",
+                      "value": "submitted"
+                    },
+                    {
+                      "description": "Filter by loan product type",
+                      "key": "productType",
+                      "value": "business_loan"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"applicantId\": \"string\",\n      \"productType\": \"string\",\n      \"requestedAmount\": 5234.207721005988,\n      \"termMonths\": 7220,\n      \"status\": \"approved\",\n      \"createdAt\": \"1978-02-27T15:37:37.959Z\",\n      \"updatedAt\": \"1963-12-05T03:44:19.690Z\",\n      \"underwritingResult\": {\n        \"applicationId\": \"string\",\n        \"status\": \"completed\",\n        \"decision\": \"denied\",\n        \"riskScore\": 78,\n        \"evaluatedAt\": \"1958-03-02T22:53:07.019Z\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"applicantId\": \"string\",\n      \"productType\": \"string\",\n      \"requestedAmount\": 3830.094986083439,\n      \"termMonths\": 5323,\n      \"status\": \"submitted\",\n      \"createdAt\": \"1967-01-10T13:13:40.103Z\",\n      \"updatedAt\": \"1948-01-10T02:32:40.103Z\",\n      \"underwritingResult\": {\n        \"applicationId\": \"string\",\n        \"status\": \"pending\",\n        \"decision\": \"referred_to_manual\",\n        \"riskScore\": 45,\n        \"evaluatedAt\": \"1977-04-09T19:46:44.854Z\"\n      }\n    }\n  ],\n  \"total\": 4323,\n  \"limit\": 6018,\n  \"offset\": 258\n}",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-e7e4f5c7-10ee-40fe-bab0-f9299fe2f5ef"
+            }
+          ],
+          "createdAt": "2026-05-29T17:51:36.000Z",
+          "updatedAt": "2026-05-29T17:51:36.000Z",
+          "uid": "38960911-cde61e44-d162-4bc5-9eeb-d6cd6de22eb8"
+        }
+      ],
+      "id": "1bc239de-393e-43c2-92a2-94e8b95908b2",
+      "createdAt": "2026-05-29T17:51:36.000Z",
+      "updatedAt": "2026-05-29T17:51:36.000Z",
+      "uid": "38960911-1bc239de-393e-43c2-92a2-94e8b95908b2"
+    },
+    {
+      "name": "health",
+      "item": [
+        {
+          "name": "Service health check",
+          "id": "93374090-6c81-4efa-9051-bd3e1f2a9cce",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "41d6816d-26a2-4d19-bb77-71a38bf1edce",
+              "name": "Service is healthy",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"status\": \"healthy\",\n  \"version\": \"string\",\n  \"uptime\": \"string\",\n  \"dependencies\": {\n    \"database\": \"string\",\n    \"creditBureau\": \"string\",\n    \"documentStore\": \"string\"\n  }\n}",
+              "createdAt": "2026-05-29T17:51:36.000Z",
+              "updatedAt": "2026-05-29T17:51:36.000Z",
+              "uid": "38960911-41d6816d-26a2-4d19-bb77-71a38bf1edce"
+            }
+          ],
+          "createdAt": "2026-05-29T17:51:36.000Z",
+          "updatedAt": "2026-05-29T17:51:36.000Z",
+          "uid": "38960911-93374090-6c81-4efa-9051-bd3e1f2a9cce"
+        }
+      ],
+      "id": "5a920887-f3b8-4376-976b-d3de086a7961",
+      "createdAt": "2026-05-29T17:51:36.000Z",
+      "updatedAt": "2026-05-29T17:51:36.000Z",
+      "uid": "38960911-5a920887-f3b8-4376-976b-d3de086a7961"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://lending-api.example.com/v1",
+      "type": "any"
+    }
+  ]
+}

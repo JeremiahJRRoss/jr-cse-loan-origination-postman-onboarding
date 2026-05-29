@@ -18,3 +18,9 @@
 **Source of fix:** AI / Docs / action.yml / experiment / other
 
 -->
+
+### 2026-05-29 — generated CI workflow committed as escaped single line (same as companion)
+**Tried:** Inspecting `.github/workflows/loan-origination-tests.yml` after onboarding.
+**Error:** One physical line, 90 literal `\n`, invalid YAML (`mapping values are not allowed here, line 1, column 49`); "Invalid workflow file" on GitHub. Original is 4370 bytes — byte-identical to the companion's broken `payments-tests.yml`.
+**Changed:** Decoded `\n` → newlines; verified lossless against the committed bytes (4370 → 4280, reversible) and that it parses with `on` + `jobs.test`. Byte-identity check vs the companion's *fixed* file deferred — companion repo is out of scope for this session's GitHub access; run the `diff` locally.
+**Source of fix:** experiment. Root cause documented in the companion's README §11.A #6 — upstream repo-sync escaping; same generic workflow → same bug.

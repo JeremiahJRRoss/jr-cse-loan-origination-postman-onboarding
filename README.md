@@ -131,6 +131,8 @@ runs because they're produced by the same upstream actions:
 
 ### 7.C — Loan-specific observations
 
+The generated CI workflow (`.github/workflows/loan-origination-tests.yml`) shipped as a single escaped line and needed the same `\n` → newline decode as the companion — see the companion's [README §11.A #6](https://github.com/JeremiahJRRoss/jr-cse-payments-postman-onboarding#11a) for the root cause (it's the same generic generated workflow, so the same upstream bug).
+
 <!-- TODO: after running the workflow and validating the UI, add any observations specific to this spec:
 
 - Whether the generated baseline collection correctly handles the

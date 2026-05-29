@@ -18,10 +18,13 @@ been corrected to match.
 
 ## Permissions
 - Needs `actions: write` and `contents: write` only. There is **no `variables: write`
-  permission key** in GitHub Actions — it's a parse error. Repo variables (workspace/
-  spec/collection IDs for idempotent re-runs) are persisted via the `github-token` /
-  `gh-fallback-token` input (action.yml: "GitHub token used for repo variables and
-  generated commits"), not via a workflow permission.
+  permission key** in GitHub Actions — it's a parse error. Any repo-variable writes
+  or commit-backs the action performs use the `github-token` / `gh-fallback-token`
+  input (action.yml: "GitHub token used for repo variables and generated commits"),
+  not a workflow permission. In practice the action persists **no** resource-ID
+  variables, so re-runs are **not** made idempotent through stored IDs — the
+  workspace is matched via the git-sync link, while spec/collections/mock/monitor
+  are re-created each run. See README §7.D and companion README §10.
 
 ## ci-workflow-path
 - Default is `.github/workflows/ci.yml` (NOT `onboard.yml`). The earlier

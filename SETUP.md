@@ -304,7 +304,7 @@ section apply here identically. If you hit:
 - **"refusing to allow... without `workflows` permission"** — likely PAT scope; see Step 2
 - **403 on push** — your PAT didn't get this repo added; redo Step 2
 - **Workspace empty / partial in Postman** — POSTMAN_ACCESS_TOKEN missing or expired; re-extract per Step 1
-- **Multiple workspaces / duplicate collections** — failed earlier runs left state; nuke the workspace via API, clear `POSTMAN_*` repo variables, re-run (see companion SETUP for cleanup recipe)
+- **Duplicate collections / specs after multiple runs — expected, not a failure.** The onboarding action reuses the workspace (git-sync link) but re-creates the spec, collections, mock, and monitor with new IDs on every run, so repeated runs accumulate duplicates in the same workspace. This is the same behavior characterized in the companion repo (`README §10`). To reset: delete the extra objects, or nuke and recreate the workspace, then run once. Treat onboarding as create-once per service (see companion SETUP for the full cleanup recipe).
 
 ---
 
